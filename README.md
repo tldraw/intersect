@@ -10,31 +10,52 @@ This package contains 2D intersection utility functions used by [tldraw](https:/
 
 ## Installation
 
-Use your package manager of choice to install `@tldraw/vec` and its peer dependencies.
+Use your package manager of choice to install `@tldraw/intersect`.
 
 ```bash
-yarn add @tldraw/vec
+yarn add @tldraw/intersect
 # or
-npm i @tldraw/vec
+npm i @tldraw/intersect
 ```
 
 ## Usage
 
-This library exports a class named `Vec` that contains only static methods. You can use these methods to create 2D vectors formatted as `[x, y]`.
+This library exports many intersection functions. You can use these methods to find intersection points between various 2D shapes. Points are formatted as `[x, y]`.
 
 ```tsx
-import { Vec } from "@tldraw/vec"
+import { intersectLineSegmentEllipse } from "@tldraw/intersect"
 
 const A = [5, 5]
 const B = [10, 10]
-const C = Vec.add(A, B)
+const ellipse = { center: [10, 10], rx: 5, ry: 4, rotation: Math.PI / 6 }
+
+const intersections = intersectLineSegmentEllipse(
+  A,
+  B,
+  ellipse.center,
+  ellipse.rx,
+  ellipse.ry,
+  ellipse.rotation
+)
 ```
+
+An intersection is formatted as:
+
+```ts
+export type TLIntersection = {
+  didIntersect: boolean
+  message: string
+  points: number[][]
+}
+```
+
+Some intersection functions, such as `intersectLineSegmentLineSegment`, will return a single intersection. Others, such as `intersectRectangleRectangle`, will return an array of several intersections.
 
 ## Community
 
 ### Support
 
-Need help? Please [open an issue](https://github.com/tldraw/vec/issues/new) for support.
+Need help? Please [open an issue](https://github.com/tldraw/intersect/issues/new) for support.
 
 ### Discussion
 

@@ -82,7 +82,7 @@ function isAngleBetween(a: number, b: number, c: number): boolean {
  * @param p1 The second ray's point.
  * @param n1 The second ray's direction vector.
  */
-export function /*#__PURE__*/ intersectRayRay(
+export function intersectRayRay(
   p0: number[],
   n0: number[],
   p1: number[],
@@ -114,7 +114,7 @@ export function /*#__PURE__*/ intersectRayRay(
  * @param a1
  * @param a2
  */
-export function /*#__PURE__*/ intersectRayLineSegment(
+export function intersectRayLineSegment(
   origin: number[],
   direction: number[],
   a1: number[],
@@ -146,7 +146,7 @@ export function /*#__PURE__*/ intersectRayLineSegment(
  * @param size
  * @param rotation
  */
-export function /*#__PURE__*/ intersectRayRectangle(
+export function intersectRayRectangle(
   origin: number[],
   direction: number[],
   point: number[],
@@ -165,7 +165,7 @@ export function /*#__PURE__*/ intersectRayRectangle(
  * @param ry
  * @param rotation
  */
-export function /*#__PURE__*/ intersectRayEllipse(
+export function intersectRayEllipse(
   origin: number[],
   direction: number[],
   center: number[],
@@ -185,7 +185,7 @@ export function /*#__PURE__*/ intersectRayEllipse(
  * @param bounds
  * @param rotation
  */
-export function /*#__PURE__*/ intersectRayBounds(
+export function intersectRayBounds(
   origin: number[],
   direction: number[],
   bounds: TLBounds,
@@ -212,7 +212,7 @@ export function /*#__PURE__*/ intersectRayBounds(
  * @param origin
  * @param direction
  */
-export function /*#__PURE__*/ intersectLineSegmentRay(
+export function intersectLineSegmentRay(
   a1: number[],
   a2: number[],
   origin: number[],
@@ -228,7 +228,7 @@ export function /*#__PURE__*/ intersectLineSegmentRay(
  * @param b1
  * @param b2
  */
-export function /*#__PURE__*/ intersectLineSegmentLineSegment(
+export function intersectLineSegmentLineSegment(
   a1: number[],
   a2: number[],
   b1: number[],
@@ -268,7 +268,7 @@ export function /*#__PURE__*/ intersectLineSegmentLineSegment(
  * @param point
  * @param size
  */
-export function /*#__PURE__*/ intersectLineSegmentRectangle(
+export function intersectLineSegmentRectangle(
   a1: number[],
   a2: number[],
   point: number[],
@@ -286,7 +286,7 @@ export function /*#__PURE__*/ intersectLineSegmentRectangle(
  * @param start
  * @param end
  */
-export function /*#__PURE__*/ intersectLineSegmentArc(
+export function intersectLineSegmentArc(
   a1: number[],
   a2: number[],
   center: number[],
@@ -305,14 +305,14 @@ export function /*#__PURE__*/ intersectLineSegmentArc(
     a2
   )
 
-  if (!ellipseTest.didIntersect) return createIntersection("No intersection")
+  if (!ellipseTest.didIntersect) return createIntersection("no intersection")
 
   const points = ellipseTest.points.filter((point) =>
     isAngleBetween(sa, ea, Vec.angle(center, point))
   )
 
   if (points.length === 0) {
-    return createIntersection("No intersection")
+    return createIntersection("no intersection")
   }
 
   return createIntersection("intersection", ...points)
@@ -325,7 +325,7 @@ export function /*#__PURE__*/ intersectLineSegmentArc(
  * @param c
  * @param r
  */
-export function /*#__PURE__*/ intersectLineSegmentCircle(
+export function intersectLineSegmentCircle(
   a1: number[],
   a2: number[],
   c: number[],
@@ -380,7 +380,7 @@ export function /*#__PURE__*/ intersectLineSegmentCircle(
  * @param ry
  * @param rotation
  */
-export function /*#__PURE__*/ intersectLineSegmentEllipse(
+export function intersectLineSegmentEllipse(
   a1: number[],
   a2: number[],
   center: number[],
@@ -390,7 +390,7 @@ export function /*#__PURE__*/ intersectLineSegmentEllipse(
 ): TLIntersection {
   // If the ellipse or line segment are empty, return no tValues.
   if (rx === 0 || ry === 0 || Vec.isEqual(a1, a2)) {
-    return createIntersection("No intersection")
+    return createIntersection("no intersection")
   }
 
   // Get the semimajor and semiminor axes.
@@ -440,7 +440,7 @@ export function /*#__PURE__*/ intersectLineSegmentEllipse(
  * @param a2
  * @param bounds
  */
-export function /*#__PURE__*/ intersectLineSegmentBounds(
+export function intersectLineSegmentBounds(
   a1: number[],
   a2: number[],
   bounds: TLBounds
@@ -454,12 +454,12 @@ export function /*#__PURE__*/ intersectLineSegmentBounds(
  * @param a2
  * @param points
  */
-export function /*#__PURE__*/ intersectLineSegmentPolyline(
+export function intersectLineSegmentPolyline(
   a1: number[],
   a2: number[],
   points: number[][]
-): TLIntersection[] {
-  const intersections: TLIntersection[] = []
+): TLIntersection {
+  const pts: number[][] = []
 
   for (let i = 1; i < points.length + 1; i++) {
     const int = intersectLineSegmentLineSegment(
@@ -470,11 +470,15 @@ export function /*#__PURE__*/ intersectLineSegmentPolyline(
     )
 
     if (int) {
-      intersections.push(int)
+      pts.push(...int.points)
     }
   }
 
-  return intersections
+  if (pts.length === 0) {
+    return createIntersection("no intersection")
+  }
+
+  return createIntersection("intersection", ...points)
 }
 
 /* -------------------------------------------------- */
@@ -489,7 +493,7 @@ export function /*#__PURE__*/ intersectLineSegmentPolyline(
  * @param origin
  * @param direction
  */
-export function /*#__PURE__*/ intersectRectangleRay(
+export function intersectRectangleRay(
   point: number[],
   size: number[],
   rotation: number,
@@ -518,7 +522,7 @@ export function /*#__PURE__*/ intersectRectangleRay(
  * @param a1
  * @param a2
  */
-export function /*#__PURE__*/ intersectRectangleLineSegment(
+export function intersectRectangleLineSegment(
   point: number[],
   size: number[],
   a1: number[],
@@ -546,7 +550,7 @@ export function /*#__PURE__*/ intersectRectangleLineSegment(
  * @param point2
  * @param size2
  */
-export function /*#__PURE__*/ intersectRectangleRectangle(
+export function intersectRectangleRectangle(
   point1: number[],
   size1: number[],
   point2: number[],
@@ -578,7 +582,7 @@ export function /*#__PURE__*/ intersectRectangleRectangle(
  * @param start
  * @param end
  */
-export function /*#__PURE__*/ intersectRectangleArc(
+export function intersectRectangleArc(
   point: number[],
   size: number[],
   center: number[],
@@ -615,7 +619,7 @@ export function /*#__PURE__*/ intersectRectangleArc(
  * @param c
  * @param r
  */
-export function /*#__PURE__*/ intersectRectangleCircle(
+export function intersectRectangleCircle(
   point: number[],
   size: number[],
   c: number[],
@@ -645,7 +649,7 @@ export function /*#__PURE__*/ intersectRectangleCircle(
  * @param ry
  * @param rotation
  */
-export function /*#__PURE__*/ intersectRectangleEllipse(
+export function intersectRectangleEllipse(
   point: number[],
   size: number[],
   c: number[],
@@ -681,7 +685,7 @@ export function /*#__PURE__*/ intersectRectangleEllipse(
  * @param size
  * @param bounds
  */
-export function /*#__PURE__*/ intersectRectangleBounds(
+export function intersectRectangleBounds(
   point: number[],
   size: number[],
   bounds: TLBounds
@@ -696,7 +700,7 @@ export function /*#__PURE__*/ intersectRectangleBounds(
  * @param size
  * @param points
  */
-export function /*#__PURE__*/ intersectRectanglePolyline(
+export function intersectRectanglePolyline(
   point: number[],
   size: number[],
   points: number[][]
@@ -704,12 +708,10 @@ export function /*#__PURE__*/ intersectRectanglePolyline(
   const sideIntersections = getRectangleSides(point, size).reduce<
     TLIntersection[]
   >((acc, [message, [a1, a2]]) => {
-    const intersections = intersectLineSegmentPolyline(a1, a2, points)
+    const intersection = intersectLineSegmentPolyline(a1, a2, points)
 
-    if (intersections.length > 0) {
-      acc.push(
-        createIntersection(message, ...intersections.flatMap((i) => i.points))
-      )
+    if (intersection.didIntersect) {
+      acc.push(createIntersection(message, ...intersection.points))
     }
 
     return acc
@@ -731,7 +733,7 @@ export function /*#__PURE__*/ intersectRectanglePolyline(
  * @param a1
  * @param a2
  */
-export function /*#__PURE__*/ intersectArcLineSegment(
+export function intersectArcLineSegment(
   center: number[],
   radius: number,
   start: number[],
@@ -751,7 +753,7 @@ export function /*#__PURE__*/ intersectArcLineSegment(
  * @param point
  * @param size
  */
-export function /*#__PURE__*/ intersectArcRectangle(
+export function intersectArcRectangle(
   center: number[],
   radius: number,
   start: number[],
@@ -770,7 +772,7 @@ export function /*#__PURE__*/ intersectArcRectangle(
  * @param end
  * @param bounds
  */
-export function /*#__PURE__*/ intersectArcBounds(
+export function intersectArcBounds(
   center: number[],
   radius: number,
   start: number[],
@@ -799,7 +801,7 @@ export function /*#__PURE__*/ intersectArcBounds(
  * @param a1
  * @param a2
  */
-export function /*#__PURE__*/ intersectCircleLineSegment(
+export function intersectCircleLineSegment(
   c: number[],
   r: number,
   a1: number[],
@@ -815,7 +817,7 @@ export function /*#__PURE__*/ intersectCircleLineSegment(
  * @param c2
  * @param r2
  */
-export function /*#__PURE__*/ intersectCircleCircle(
+export function intersectCircleCircle(
   c1: number[],
   r1: number,
   c2: number[],
@@ -845,7 +847,7 @@ export function /*#__PURE__*/ intersectCircleCircle(
  * @param point
  * @param size
  */
-export function /*#__PURE__*/ intersectCircleRectangle(
+export function intersectCircleRectangle(
   c: number[],
   r: number,
   point: number[],
@@ -860,7 +862,7 @@ export function /*#__PURE__*/ intersectCircleRectangle(
  * @param r
  * @param bounds
  */
-export function /*#__PURE__*/ intersectCircleBounds(
+export function intersectCircleBounds(
   c: number[],
   r: number,
   bounds: TLBounds
@@ -882,7 +884,7 @@ export function /*#__PURE__*/ intersectCircleBounds(
  * @param point
  * @param direction
  */
-export function /*#__PURE__*/ intersectEllipseRay(
+export function intersectEllipseRay(
   center: number[],
   rx: number,
   ry: number,
@@ -902,7 +904,7 @@ export function /*#__PURE__*/ intersectEllipseRay(
  * @param a1
  * @param a2
  */
-export function /*#__PURE__*/ intersectEllipseLineSegment(
+export function intersectEllipseLineSegment(
   center: number[],
   rx: number,
   ry: number,
@@ -926,7 +928,7 @@ export function /*#__PURE__*/ intersectEllipseLineSegment(
  * @param point
  * @param size
  */
-export function /*#__PURE__*/ intersectEllipseRectangle(
+export function intersectEllipseRectangle(
   center: number[],
   rx: number,
   ry: number,
@@ -953,7 +955,7 @@ export function /*#__PURE__*/ intersectEllipseRectangle(
  * @param _ry2
  * @param _r2
  */
-export function /*#__PURE__*/ intersectEllipseEllipse(
+export function intersectEllipseEllipse(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _c1: number[],
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -984,7 +986,7 @@ export function /*#__PURE__*/ intersectEllipseEllipse(
  * @param c2
  * @param r2
  */
-export function /*#__PURE__*/ intersectEllipseCircle(
+export function intersectEllipseCircle(
   c: number[],
   rx: number,
   ry: number,
@@ -1003,7 +1005,7 @@ export function /*#__PURE__*/ intersectEllipseCircle(
  * @param rotation
  * @param bounds
  */
-export function /*#__PURE__*/ intersectEllipseBounds(
+export function intersectEllipseBounds(
   c: number[],
   rx: number,
   ry: number,
@@ -1027,7 +1029,7 @@ export function /*#__PURE__*/ intersectEllipseBounds(
  * @param origin
  * @param direction
  */
-export function /*#__PURE__*/ intersectBoundsRay(
+export function intersectBoundsRay(
   bounds: TLBounds,
   origin: number[],
   direction: number[]
@@ -1042,7 +1044,7 @@ export function /*#__PURE__*/ intersectBoundsRay(
  * @param a1
  * @param a2
  */
-export function /*#__PURE__*/ intersectBoundsLineSegment(
+export function intersectBoundsLineSegment(
   bounds: TLBounds,
   a1: number[],
   a2: number[]
@@ -1057,7 +1059,7 @@ export function /*#__PURE__*/ intersectBoundsLineSegment(
  * @param point
  * @param size
  */
-export function /*#__PURE__*/ intersectBoundsRectangle(
+export function intersectBoundsRectangle(
   bounds: TLBounds,
   point: number[],
   size: number[]
@@ -1071,7 +1073,7 @@ export function /*#__PURE__*/ intersectBoundsRectangle(
  * @param bounds1
  * @param bounds2
  */
-export function /*#__PURE__*/ intersectBoundsBounds(
+export function intersectBoundsBounds(
   bounds1: TLBounds,
   bounds2: TLBounds
 ): TLIntersection[] {
@@ -1091,7 +1093,7 @@ export function /*#__PURE__*/ intersectBoundsBounds(
  * @param start
  * @param end
  */
-export function /*#__PURE__*/ intersectBoundsArc(
+export function intersectBoundsArc(
   bounds: TLBounds,
   center: number[],
   radius: number,
@@ -1115,7 +1117,7 @@ export function /*#__PURE__*/ intersectBoundsArc(
  * @param c
  * @param r
  */
-export function /*#__PURE__*/ intersectBoundsCircle(
+export function intersectBoundsCircle(
   bounds: TLBounds,
   c: number[],
   r: number
@@ -1132,7 +1134,7 @@ export function /*#__PURE__*/ intersectBoundsCircle(
  * @param ry
  * @param rotation
  */
-export function /*#__PURE__*/ intersectBoundsEllipse(
+export function intersectBoundsEllipse(
   bounds: TLBounds,
   c: number[],
   rx: number,
@@ -1155,7 +1157,7 @@ export function /*#__PURE__*/ intersectBoundsEllipse(
  * @param bounds
  * @param points
  */
-export function /*#__PURE__*/ intersectBoundsPolyline(
+export function intersectBoundsPolyline(
   bounds: TLBounds,
   points: number[][]
 ): TLIntersection[] {
@@ -1172,11 +1174,11 @@ export function /*#__PURE__*/ intersectBoundsPolyline(
  * @param a1
  * @param a2
  */
-export function /*#__PURE__*/ intersectPolylineLineSegment(
+export function intersectPolylineLineSegment(
   points: number[][],
   a1: number[],
   a2: number[]
-): TLIntersection[] {
+): TLIntersection {
   return intersectLineSegmentPolyline(a1, a2, points)
 }
 
@@ -1186,7 +1188,7 @@ export function /*#__PURE__*/ intersectPolylineLineSegment(
  * @param point
  * @param size
  */
-export function /*#__PURE__*/ intersectPolylineRectangle(
+export function intersectPolylineRectangle(
   points: number[][],
   point: number[],
   size: number[]
@@ -1199,7 +1201,7 @@ export function /*#__PURE__*/ intersectPolylineRectangle(
  * @param points
  * @param bounds
  */
-export function /*#__PURE__*/ intersectPolylineBounds(
+export function intersectPolylineBounds(
   points: number[][],
   bounds: TLBounds
 ): TLIntersection[] {
