@@ -1,6 +1,6 @@
 {
   "name": "@tldraw/intersect",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "2D intersection utilities for TLDraw and maybe you, too.",
   "author": "@steveruizok",
   "repository": {
@@ -25,7 +25,7 @@
   "types": "dist/types.d.ts",
   "scripts": {
     "start": "parcel watch",
-    "build": "parcel build",
+    "build": "parcel build && tsc --project tsconfig.build.json",
     "check": "tsc --noEmit",
     "lint": "eslint"
   },
