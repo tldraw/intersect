@@ -29,6 +29,18 @@
     "check": "tsc --noEmit",
     "lint": "eslint"
   },
+  "targets": {
+    "main": {
+      "includeNodeModules": {
+        "@tldraw/vec": false
+      }
+    },
+    "module": {
+      "includeNodeModules": {
+        "@tldraw/vec": false
+      }
+    }
+  },
   "dependencies": {
     "@tldraw/vec": "^0.1.3"
   },
