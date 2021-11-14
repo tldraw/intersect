@@ -461,6 +461,38 @@ export function intersectLineSegmentPolyline(
 ): TLIntersection {
   const pts: number[][] = []
 
+  for (let i = 1; i < points.length; i++) {
+    const int = intersectLineSegmentLineSegment(
+      a1,
+      a2,
+      points[i - 1],
+      points[i]
+    )
+
+    if (int) {
+      pts.push(...int.points)
+    }
+  }
+
+  if (pts.length === 0) {
+    return createIntersection("no intersection")
+  }
+
+  return createIntersection("intersection", ...points)
+}
+/**
+ * Find the intersections between a line segment and a closed polygon.
+ * @param a1
+ * @param a2
+ * @param points
+ */
+export function intersectLineSegmentPolygon(
+  a1: number[],
+  a2: number[],
+  points: number[][]
+): TLIntersection {
+  const pts: number[][] = []
+
   for (let i = 1; i < points.length + 1; i++) {
     const int = intersectLineSegmentLineSegment(
       a1,
@@ -709,6 +741,31 @@ export function intersectRectanglePolyline(
     TLIntersection[]
   >((acc, [message, [a1, a2]]) => {
     const intersection = intersectLineSegmentPolyline(a1, a2, points)
+
+    if (intersection.didIntersect) {
+      acc.push(createIntersection(message, ...intersection.points))
+    }
+
+    return acc
+  }, [])
+
+  return sideIntersections.filter((int) => int.didIntersect)
+}
+/**
+ * Find the intersections between a rectangle and a polygon.
+ * @param point
+ * @param size
+ * @param points
+ */
+export function intersectRectanglePolygon(
+  point: number[],
+  size: number[],
+  points: number[][]
+): TLIntersection[] {
+  const sideIntersections = getRectangleSides(point, size).reduce<
+    TLIntersection[]
+  >((acc, [message, [a1, a2]]) => {
+    const intersection = intersectLineSegmentPolygon(a1, a2, points)
 
     if (intersection.didIntersect) {
       acc.push(createIntersection(message, ...intersection.points))
@@ -1164,6 +1221,18 @@ export function intersectBoundsPolyline(
   return intersectPolylineBounds(points, bounds)
 }
 
+/**
+ * Find the intersections between a bounding box and a polygon.
+ * @param bounds
+ * @param points
+ */
+export function intersectBoundsPolygon(
+  bounds: TLBounds,
+  points: number[][]
+): TLIntersection[] {
+  return intersectPolygonBounds(points, bounds)
+}
+
 /* -------------------------------------------------- */
 /*                      Polyline                      */
 /* -------------------------------------------------- */
@@ -1206,6 +1275,54 @@ export function intersectPolylineBounds(
   bounds: TLBounds
 ): TLIntersection[] {
   return intersectRectanglePolyline(
+    [bounds.minX, bounds.minY],
+    [bounds.width, bounds.height],
+    points
+  )
+}
+
+/* -------------------------------------------------- */
+/*                       Polygon                      */
+/* -------------------------------------------------- */
+
+/**
+ * Find the intersections between a polygon nd a line segment.
+ * @param points
+ * @param a1
+ * @param a2
+ */
+export function intersectPolygonLineSegment(
+  points: number[][],
+  a1: number[],
+  a2: number[]
+): TLIntersection {
+  return intersectLineSegmentPolyline(a1, a2, points)
+}
+
+/**
+ * Find the intersections between a polygon and a rectangle.
+ * @param points
+ * @param point
+ * @param size
+ */
+export function intersectPolygonRectangle(
+  points: number[][],
+  point: number[],
+  size: number[]
+): TLIntersection[] {
+  return intersectRectanglePolyline(point, size, points)
+}
+
+/**
+ * Find the intersections between a polygon and a bounding box.
+ * @param points
+ * @param bounds
+ */
+export function intersectPolygonBounds(
+  points: number[][],
+  bounds: TLBounds
+): TLIntersection[] {
+  return intersectRectanglePolygon(
     [bounds.minX, bounds.minY],
     [bounds.width, bounds.height],
     points
